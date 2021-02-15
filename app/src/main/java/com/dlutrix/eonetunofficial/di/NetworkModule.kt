@@ -2,16 +2,10 @@ package com.dlutrix.eonetunofficial.di
 
 import com.dlutrix.eonetunofficial.data.source.EonetApiService
 import com.dlutrix.eonetunofficial.utils.Constant
-import com.dlutrix.eonetunofficial.utils.Constant.BASE_URL
-import com.dlutrix.eonetunofficial.utils.Constant.DEBUG
-import com.dlutrix.eonetunofficial.utils.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import okhttp3.Dispatcher
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,18 +13,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+
 @Module
-@InstallIn(ApplicationComponent::class)
-object AppModule {
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseUrl() = BASE_URL
+    fun provideBaseUrl() = Constant.BASE_URL
 
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient =
-        if (DEBUG) {
+        if (Constant.DEBUG) {
             val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BODY
             OkHttpClient.Builder()
@@ -61,17 +56,4 @@ object AppModule {
     fun provideEonetApiService(
         retrofit: Retrofit
     ): EonetApiService = retrofit.create(EonetApiService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideDispatchers(): DispatcherProvider = object : DispatcherProvider {
-        override val main: CoroutineDispatcher
-            get() = Dispatchers.Main
-        override val io: CoroutineDispatcher
-            get() = Dispatchers.IO
-        override val default: CoroutineDispatcher
-            get() = Dispatchers.Default
-        override val unconfined: CoroutineDispatcher
-            get() = Dispatchers.Unconfined
-    }
 }

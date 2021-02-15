@@ -1,6 +1,6 @@
 package com.dlutrix.eonetunofficial.ui.home
 
-import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dlutrix.eonetunofficial.data.model.DetailCategories
@@ -9,13 +9,16 @@ import com.dlutrix.eonetunofficial.repository.detailCategories.DetailCategoriesR
 import com.dlutrix.eonetunofficial.repository.eventCategories.EventCategoriesRepository
 import com.dlutrix.eonetunofficial.utils.DispatcherProvider
 import com.dlutrix.eonetunofficial.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor (
     private val categoriesRepository: EventCategoriesRepository,
     private val detailCategoriesRepository: DetailCategoriesRepository,
-    private val dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
     init {
